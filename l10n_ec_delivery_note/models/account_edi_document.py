@@ -120,6 +120,7 @@ class AccountEdiDocument(models.Model):
         return super(AccountEdiDocument, moves)._process_documents_no_web_services()
 
     def _process_documents_web_services(self, job_count=None, with_commit=True):
+        # PV This process makes imposible to have only invoice module
         moves = self.filtered("move_id")
         super(AccountEdiDocument, moves)._process_documents_web_services()
         delivery_notes = self - moves

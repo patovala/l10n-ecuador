@@ -192,6 +192,8 @@ class AccountEdiFormat(models.Model):
         return errors
 
     def _post_invoice_edi(self, documents):
+        # PV este es el proceso que envia al ws
+        # __import__('ipdb').set_trace()
         res = {}
         if self.code not in ("l10n_ec_format_sri",):
             return super()._post_invoice_edi(documents)
@@ -255,6 +257,8 @@ class AccountEdiFormat(models.Model):
                     # intentar consultar el documento previamente autorizado
                     is_sent = False
                     msj = []
+
+                    # __import__('ipdb').set_trace()
                     if edi_doc.l10n_ec_last_sent_date:
                         sri_res = edi_doc._l10n_ec_edi_send_xml_auth(auth_client)
                         is_auth, msj = edi_doc._l10n_ec_edi_process_response_auth(

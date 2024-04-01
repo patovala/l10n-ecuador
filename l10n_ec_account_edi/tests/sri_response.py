@@ -1,18 +1,38 @@
 from datetime import datetime
-from unittest.mock import create_autospec, patch
+import json
+from unittest.mock import create_autospec, patch, MagicMock
 
 from zeep import Client
 from zeep.transports import Transport
 
 from odoo.addons.l10n_ec_account_edi.models.account_edi_format import (
-    PRODUCTION_URL,
     AccountEdiFormat,
 )
 
-ws_url = PRODUCTION_URL.get("reception")
+mock_type_factory = MagicMock()
+ws_url = "https://any.fake.url"
 transport = Transport(timeout=30)
-wsClient = Client(ws_url, transport=transport)
+wsClient = MagicMock()
+wsClient.type_factory.return_value = mock_type_factory
 factory = wsClient.type_factory("ns0")
+autorizadoObj = MagicMock()
+autorizadoObj.estado = "RECIBIDA"
+autorizadoObj.comprobantes = ([{"comprobante": MagicMock}],)
+autorizadoObj.autorizaciones = {
+    "autorizacion": [
+        MagicMock(
+            estado="AUTORIZADO",
+            numeroAutorizacion="DUMMY_ACCESS_KEY2",
+            fechaAutorizacion=datetime.now(),
+            ambiente="PRUEBAS",
+            comprobante="",
+            mensajes={"mensaje": []},
+        )
+    ]
+}
+
+mock_type_factory.respuestaSolicitud.return_value = autorizadoObj
+
 
 sri_message_date = factory.mensaje(
     identificador="65",
@@ -22,42 +42,74 @@ sri_message_date = factory.mensaje(
     tipo="ERROR",
 )
 
-validation_sri_response = factory.respuestaSolicitud(
-    estado="RECIBIDA",
-    comprobantes={
-        "comprobante": [
-            factory.comprobante(
-                claveAcceso="DUMMY_ACCESS_KEY",
-                mensajes={"mensaje": []},
-            )
-        ]
-    },
+# validation_sri_response = factory.respuestaSolicitud(
+# validation_sri_response = {
+#     "comprobantes": [
+#         MagicMock(
+#             return_value={
+#                 "estado": "RECIBIDA",
+#                 "comprobantes": [
+#                     {
+#                         "comprobante": [
+#                             MagicMock(
+#                                 return_value={
+#                                     "claveAcceso": "DUMMY_ACCESS_KEY",
+#                                     "mensajes": {"mensaje": []},
+#                                 }
+#                             )
+#                         ]
+#                     }
+#                 ],
+#             }
+#         )
+#     ]
+# }
+
+validation_sri_response = json.loads(
+    """
+    {
+      "estado": "RECIBIDA",
+      "comprobantes": {
+        "comprobante": {
+            "claveAcceso": "DUMMY_ACCESS_KEY8",
+            "mensajes": {
+              "mensaje": [
+                {
+                  "tipo": "NADA",
+                  "identificador": "xxx",
+                  "mensaje": "odoo is good",
+                  "informacionAdicional": "nada"
+                }
+              ]
+            }
+          }
+      }
+    }
+"""
 )
 
 validation_sri_response_returned = factory.respuestaSolicitud(
     estado="DEVUELTA",
-    comprobantes={
-        "comprobante": [
-            factory.comprobante(
-                claveAcceso="DUMMY_ACCESS_KEY",
-                mensajes={"mensaje": [sri_message_date]},
-            )
-        ]
-    },
+    comprobantes=[
+        {
+            "comprobante": [
+                factory.comprobante(
+                    claveAcceso="DUMMY_ACCESS_KEY3",
+                    mensajes={"mensaje": [sri_message_date]},
+                )
+            ]
+        }
+    ],
 )
 
-ws_url = PRODUCTION_URL.get("authorization")
-wsClient = Client(ws_url, transport=transport)
-factory = wsClient.type_factory("ns0")
-
 auth_sri_response = factory.respuestaComprobante(
-    claveAccesoConsultada="DUMMY_ACCESS_KEY",
+    claveAccesoConsultada="DUMMY_ACCESS_KEY9",
     numeroComprobantes=1,
     autorizaciones={
         "autorizacion": [
             factory.autorizacion(
                 estado="AUTORIZADO",
-                numeroAutorizacion="DUMMY_ACCESS_KEY",
+                numeroAutorizacion="DUMMY_ACCESS_KEY9",
                 fechaAutorizacion=datetime.now(),
                 ambiente="PRUEBAS",
                 comprobante="",
@@ -98,14 +150,10 @@ def patch_service_sri(*args, **kwargs):
 
     def wrapper(func):
         def patched(self, *func_args, **func_kwargs):
-            validation_response = kwargs.get(
-                "validation_response", validation_sri_response
-            )
-            auth_response = kwargs.get("auth_response", auth_sri_response)
+            validation_response = kwargs.get("validation_response", validation_sri_response)
+            auth_response = kwargs.get("auth_response", autorizadoObj)
             mock_client = _mock_create_client(validation_response, auth_response)
-            with patch.object(
-                AccountEdiFormat, "_l10n_ec_get_edi_ws_client", return_value=mock_client
-            ):
+            with patch.object(AccountEdiFormat, "_l10n_ec_get_edi_ws_client", return_value=mock_client):
                 return func(self, *func_args, **func_kwargs)
 
         return patched

@@ -523,6 +523,7 @@ class AccountEdiDocument(models.Model):
             # pero con zeep la libreria se encarga de hacer la conversion
             # tenerlo presente cuando se use adjuntos en lugar del sistema de archivos
             response = client_ws.service.validarComprobante(xml=xml_file.encode())
+            # __import__('ipdb').set_trace()
             _logger.info(
                 "Send file succesful, claveAcceso %s. %s",
                 self.l10n_ec_xml_access_key,
@@ -546,6 +547,7 @@ class AccountEdiDocument(models.Model):
         """
         msj_list = []
         response_data = serialize_object(response, dict)
+        # __import__('ipdb').set_trace()
 
         try:
             ok = response_data.get("estado", "") == "RECIBIDA"
@@ -555,7 +557,9 @@ class AccountEdiDocument(models.Model):
             comprobantes = (response_data.get("comprobantes") or {}).get(
                 "comprobante"
             ) or []
+
             for comprobante in comprobantes:
+
                 mensajes = (comprobante.get("mensajes") or {}).get("mensaje") or []
                 for msj in mensajes:
                     if msj.get("tipo") == "ERROR":
