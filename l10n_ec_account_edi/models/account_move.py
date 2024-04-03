@@ -4,6 +4,7 @@ import re
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare
+from odoo.addons.l10n_ec.models.res_partner import verify_final_consumer
 
 _logger = logging.getLogger(__name__)
 
@@ -11,21 +12,15 @@ _logger = logging.getLogger(__name__)
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-    l10n_ec_sri_payment_id = fields.Many2one(
-        default=lambda self: self.env.ref("l10n_ec.P1")
-    )
+    l10n_ec_sri_payment_id = fields.Many2one(default=lambda self: self.env.ref("l10n_ec.P1"))
 
-    l10n_ec_credit_days = fields.Integer(
-        string="Credit days", compute="_compute_l10n_ec_credit_days", store=True
-    )
+    l10n_ec_credit_days = fields.Integer(string="Credit days", compute="_compute_l10n_ec_credit_days", store=True)
     l10n_latam_internal_type = fields.Selection(
         related="l10n_latam_document_type_id.internal_type",
         string="L10n Latam Internal Type",
         store=True,
     )
-    l10n_ec_electronic_authorization = fields.Char(
-        string="Electronic Authorization", size=49, copy=False, index=True
-    )
+    l10n_ec_electronic_authorization = fields.Char(string="Electronic Authorization", size=49, copy=False, index=True)
     l10n_ec_journal_type = fields.Selection(
         related="journal_id.type",
         string="Journal Type",
@@ -41,14 +36,10 @@ class AccountMove(models.Model):
         string="Electronic Authorization Date",
         store=True,
     )
-    l10n_ec_is_edi_doc = fields.Boolean(
-        string="Is Ecuadorian Electronic Document", default=False, copy=False
-    )
+    l10n_ec_is_edi_doc = fields.Boolean(string="Is Ecuadorian Electronic Document", default=False, copy=False)
     l10n_ec_legacy_document_date = fields.Date(string="External Document Date")
     l10n_ec_legacy_document_number = fields.Char(string="External Document Number")
-    l10n_ec_legacy_document_authorization = fields.Char(
-        string="External Authorization Number", size=49
-    )
+    l10n_ec_legacy_document_authorization = fields.Char(string="External Authorization Number", size=49)
     l10n_ec_reason = fields.Char(string="Refund Reason", size=300)
 
     l10n_ec_additional_information_move_ids = fields.One2many(
@@ -69,12 +60,8 @@ class AccountMove(models.Model):
     )
     def _compute_l10n_ec_edi_document_data(self):
         for note in self:
-            edi_doc = note.edi_document_ids.filtered(
-                lambda d: d.edi_format_id.code == "l10n_ec_format_sri"
-            )
-            note.l10n_ec_authorization_date = (
-                edi_doc.l10n_ec_authorization_date or False
-            )
+            edi_doc = note.edi_document_ids.filtered(lambda d: d.edi_format_id.code == "l10n_ec_format_sri")
+            note.l10n_ec_authorization_date = edi_doc.l10n_ec_authorization_date or False
             note.l10n_ec_xml_access_key = edi_doc.l10n_ec_xml_access_key or ""
 
     @api.constrains(
@@ -83,12 +70,8 @@ class AccountMove(models.Model):
     def _check_l10n_ec_electronic_authorization_number(self):
         cadena = r"(\d{10})"
         for rec in self:
-            if rec.l10n_ec_electronic_authorization and not re.match(
-                cadena, rec.l10n_ec_electronic_authorization
-            ):
-                raise UserError(
-                    _("Invalid provider authorization number, must be numeric only")
-                )
+            if rec.l10n_ec_electronic_authorization and not re.match(cadena, rec.l10n_ec_electronic_authorization):
+                raise UserError(_("Invalid provider authorization number, must be numeric only"))
 
     def action_post(self):
         for move in self:
@@ -99,22 +82,14 @@ class AccountMove(models.Model):
     def _l10n_ec_get_payment_data(self):
         payment_data = []
         credit_days = self.l10n_ec_credit_days
-        foreign_currency = (
-            self.currency_id
-            if self.currency_id != self.company_id.currency_id
-            else False
-        )
+        foreign_currency = self.currency_id if self.currency_id != self.company_id.currency_id else False
         pay_term_line_ids = self.line_ids.filtered(
             lambda line: line.account_id.user_type_id.type in ("receivable", "payable")
         )
-        partials = pay_term_line_ids.mapped(
-            "matched_debit_ids"
-        ) + pay_term_line_ids.mapped("matched_credit_ids")
+        partials = pay_term_line_ids.mapped("matched_debit_ids") + pay_term_line_ids.mapped("matched_credit_ids")
         for partial in partials:
             counterpart_lines = partial.debit_move_id + partial.credit_move_id
-            counterpart_line = counterpart_lines.filtered(
-                lambda line: line not in self.line_ids
-            )
+            counterpart_line = counterpart_lines.filtered(lambda line: line not in self.line_ids)
             if not counterpart_line.payment_id.journal_id.l10n_ec_sri_payment_id:
                 continue
             if foreign_currency and counterpart_line.currency_id == foreign_currency:
@@ -140,15 +115,11 @@ class AccountMove(models.Model):
                 )
             payment_data.append(payment_vals)
         if not payment_data:
-            l10n_ec_sri_payment = (
-                self.l10n_ec_sri_payment_id or self.journal_id.l10n_ec_sri_payment_id
-            )
+            l10n_ec_sri_payment = self.l10n_ec_sri_payment_id or self.journal_id.l10n_ec_sri_payment_id
             payment_vals = {
                 "name": l10n_ec_sri_payment.name,
                 "formaPago": l10n_ec_sri_payment.code,
-                "total": self.edi_document_ids._l10n_ec_number_format(
-                    self.amount_total
-                ),
+                "total": self.edi_document_ids._l10n_ec_number_format(self.amount_total),
             }
             if self.invoice_payment_term_id and credit_days:
                 payment_vals.update(
@@ -166,9 +137,7 @@ class AccountMove(models.Model):
         def filter_withholding_taxes(tax_values):
             withhold_group_ids = (
                 self.env["account.tax.group"]
-                .search(
-                    [("l10n_ec_type", "in", ("withhold_vat", "withhold_income_tax"))]
-                )
+                .search([("l10n_ec_type", "in", ("withhold_vat", "withhold_income_tax"))])
                 .ids
             )
             return tax_values["tax_id"].tax_group_id.id not in withhold_group_ids
@@ -183,9 +152,7 @@ class AccountMove(models.Model):
         if (
             self.l10n_latam_use_documents
             and self.company_id.account_fiscal_country_id.code == "EC"
-            and self.edi_document_ids.filtered(
-                lambda x: x.edi_format_id.code == "l10n_ec_format_sri"
-            )
+            and self.edi_document_ids.filtered(lambda x: x.edi_format_id.code == "l10n_ec_format_sri")
         ):
             return "l10n_ec_account_edi.report_invoice_document"
         return super()._get_name_invoice_report()
@@ -222,13 +189,9 @@ class AccountMove(models.Model):
                 "in_refund",
                 "out_refund",
             ):
-                for line in move.invoice_line_ids.filtered(
-                    lambda x: not x.display_type
-                ):
+                for line in move.invoice_line_ids.filtered(lambda x: not x.display_type):
                     if float_compare(line.quantity, 0.0, precision_digits=2) <= 0:
-                        product_not_quantity.append(
-                            "  - %s" % line.product_id.display_name
-                        )
+                        product_not_quantity.append("  - %s" % line.product_id.display_name)
                 if product_not_quantity:
                     error_list.append(
                         _(
@@ -238,17 +201,14 @@ class AccountMove(models.Model):
                         % "\n".join(product_not_quantity)
                     )
                 if float_compare(move.amount_total, 0.0, precision_digits=2) <= 0:
-                    error_list.append(
-                        _("You cannot validate an invoice with zero value.")
-                    )
+                    error_list.append(_("You cannot validate an invoice with zero value."))
                 if error_list:
                     raise UserError("\n".join(error_list))
 
     def _get_l10n_latam_documents_domain(self):
         self.ensure_one()
         if (
-            self.journal_id.company_id.account_fiscal_country_id
-            != self.env.ref("base.ec")
+            self.journal_id.company_id.account_fiscal_country_id != self.env.ref("base.ec")
             or not self.journal_id.l10n_latam_use_documents
         ):
             return super()._get_l10n_latam_documents_domain()
@@ -267,17 +227,13 @@ class AccountMove(models.Model):
             ),
         ]
         internal_type = self._get_l10n_ec_internal_type()
-        allowed_documents = self._get_l10n_ec_documents_allowed(
-            self._get_l10n_ec_identification_type()
-        )
+        allowed_documents = self._get_l10n_ec_documents_allowed(self._get_l10n_ec_identification_type())
         if internal_type and allowed_documents:
             domain.append(
                 (
                     "id",
                     "in",
-                    allowed_documents.filtered(
-                        lambda x: x.internal_type == internal_type
-                    ).ids,
+                    allowed_documents.filtered(lambda x: x.internal_type == internal_type).ids,
                 )
             )
         return domain
@@ -296,6 +252,41 @@ class AccountMove(models.Model):
         elif identification_type in ("21", "20", "19"):
             return "08"
         return identification_type
+
+    def _get_l10n_ec_identification_type(self):
+        """El verdadero lugar en donde debería darse esto..."""
+        self.ensure_one()
+        move = self
+        __import__("ipdb").set_trace()
+        iparner_id_type = move.partner_id.commercial_partner_id.l10n_latam_identification_type_id.id
+        it_ruc = self.env.ref("l10n_ec.ec_ruc", False).id
+        it_dni = self.env.ref("l10n_ec.ec_dni", False).id
+        it_passport = self.env.ref("l10n_ec.ec_passport", False).id
+        it_unknown = self.env.ref("l10n_ec.ec_unknown", False).id
+        it_vat = self.env.ref("l10n_latam_base.it_vat", False).id
+        it_fid = self.env.ref("l10n_latam_base.it_fid", False).id
+        is_final_consumer = verify_final_consumer(move.partner_id.commercial_partner_id.vat)
+        is_exportacion = move.partner_id.commercial_partner_id.country_id.code != "EC"
+
+        identification_code = ""
+        if move.move_type in ("in_invoice", "in_refund"):
+            identification_code = {it_ruc: "01", it_dni: "02", it_unknown: "03"}[iparner_id_type]
+
+        elif move.move_type in ("out_invoice", "out_refund"):
+            if not is_exportacion:
+                identification_code = (
+                    is_final_consumer
+                    and "07"
+                    or {it_ruc: "04", it_dni: "05", it_passport: "06", it_fid: "08", it_vat: "08"}[
+                        iparner_id_type
+                    ]
+                )
+            else:
+                identification_code = {it_ruc: "20", it_dni: "21", it_passport: "19", it_fid: "19", it_vat: "19"}.get(
+                    iparner_id_type, "09"
+                )
+
+        return identification_code
 
     def _is_manual_document_number(self):
         is_purchase = super()._is_manual_document_number()
@@ -357,24 +348,14 @@ class AccountMove(models.Model):
                 company.l10n_ec_type_environment, "authorization"
             )
 
-            response = receipt.edi_document_ids._l10n_ec_edi_send_xml_auth(
-                authorization_client
-            )
+            response = receipt.edi_document_ids._l10n_ec_edi_send_xml_auth(authorization_client)
 
             if response is False:
-                raise ValidationError(
-                    _(
-                        "The connection to the SRI service is not possible. Please check later."
-                    )
-                )
+                raise ValidationError(_("The connection to the SRI service is not possible. Please check later."))
 
-            is_authorized = receipt.edi_document_ids._l10n_ec_edi_process_response_auth(
-                response
-            )[0]
+            is_authorized = receipt.edi_document_ids._l10n_ec_edi_process_response_auth(response)[0]
 
             if is_authorized:
-                raise ValidationError(
-                    _("The receipt is authorized. It cannot be cancelled.")
-                )
+                raise ValidationError(_("The receipt is authorized. It cannot be cancelled."))
 
         return super().button_cancel_posted_moves()
