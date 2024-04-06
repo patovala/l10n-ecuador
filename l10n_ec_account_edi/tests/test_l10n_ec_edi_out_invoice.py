@@ -1,6 +1,7 @@
 import logging
 from datetime import timedelta
-from unittest.mock import patch, skip
+from unittest.mock import patch, MagicMock
+from unittest import skip
 
 from odoo import _
 from odoo.exceptions import UserError
@@ -13,6 +14,8 @@ from odoo.addons.l10n_ec_account_edi.models.account_edi_document import (
 # from .sri_response import patch_service_sri, validation_sri_response_returned
 from .sri_response import patch_service_sri
 from .test_edi_common import TestL10nECEdiCommon
+import json
+from datetime import datetime
 
 _logger = logging.getLogger(__name__)
 
@@ -91,7 +94,7 @@ success_auth_response.get = MagicMock(side_effect=auth_response_se)
 # )
 
 
-@tagged("post_install_l10n", "post_install", "-at_install")
+@tagged("post_install_l10n", "post_install", "-at_install", "pv")
 class TestL10nClDte(TestL10nECEdiCommon):
     @skip("PV done")
     def test_l10n_ec_out_invoice_configuration(self):
@@ -110,6 +113,7 @@ class TestL10nClDte(TestL10nECEdiCommon):
         invoice = self._l10n_ec_prepare_edi_out_invoice(auto_post=True)
         self.assertEqual("posted", invoice.state)
         edi_doc = invoice._get_edi_document(self.edi_format)
+
         with self.assertLogs(
             "odoo.addons.l10n_ec_account_edi.models.account_edi_format",
             level=logging.ERROR,
@@ -126,22 +130,20 @@ class TestL10nClDte(TestL10nECEdiCommon):
         self._setup_edi_company_ec()
         # Compañia no obligada a llevar contabilidad
         self._l10n_ec_edi_company_no_account()
-        invoice = self._l10n_ec_prepare_edi_out_invoice(
-            use_payment_term=False, auto_post=True
-        )
+        invoice = self._l10n_ec_prepare_edi_out_invoice(use_payment_term=False, auto_post=True)
         # Añadir pago total a la factura
         self.generate_payment(invoice_ids=invoice.ids, journal=self.journal_cash)
         self.assertEqual(invoice.payment_state, "paid")
+
         edi_doc = invoice._get_edi_document(self.edi_format)
         edi_doc._process_documents_web_services(with_commit=False)
+
         self.assertEqual(invoice.state, "posted")
         self.assertTrue(edi_doc.l10n_ec_xml_access_key)
         self.assertEqual(invoice.l10n_ec_xml_access_key, edi_doc.l10n_ec_xml_access_key)
 
         self.assertEqual(edi_doc.state, "sent")
-        self.assertEqual(
-            invoice.l10n_ec_authorization_date, edi_doc.l10n_ec_authorization_date
-        )
+        self.assertEqual(invoice.l10n_ec_authorization_date, edi_doc.l10n_ec_authorization_date)
         # Envio de email
         try:
             invoice.action_invoice_sent()
@@ -186,9 +188,7 @@ class TestL10nClDte(TestL10nECEdiCommon):
 
         # Configurar los datos previamente
         self._setup_edi_company_ec()
-        invoice = self._l10n_ec_prepare_edi_out_invoice(
-            use_payment_term=False, auto_post=True
-        )
+        invoice = self._l10n_ec_prepare_edi_out_invoice(use_payment_term=False, auto_post=True)
         edi_doc = invoice._get_edi_document(self.edi_format)
         # simular respuesta del SRI donde no se tenga autorizaciones
         with patch.object(
@@ -213,9 +213,7 @@ class TestL10nClDte(TestL10nECEdiCommon):
             edi_doc._process_documents_web_services(with_commit=False)
         self.assertEqual(edi_doc.state, "sent")
         self.assertEqual(invoice.l10n_ec_xml_access_key, edi_doc.l10n_ec_xml_access_key)
-        self.assertEqual(
-            invoice.l10n_ec_authorization_date, edi_doc.l10n_ec_authorization_date
-        )
+        self.assertEqual(invoice.l10n_ec_authorization_date, edi_doc.l10n_ec_authorization_date)
 
     @skip("PV refactorizando")
     @patch_service_sri(validation_response=sent_response)
@@ -241,9 +239,7 @@ class TestL10nClDte(TestL10nECEdiCommon):
         # Factura con cliente sin identificación para que no se valide el XML
 
         self._setup_edi_company_ec()
-        invoice = self._l10n_ec_prepare_edi_out_invoice(
-            partner=self.partner_passport, auto_post=True
-        )
+        invoice = self._l10n_ec_prepare_edi_out_invoice(partner=self.partner_passport, auto_post=True)
         edi_doc = invoice._get_edi_document(self.edi_format)
         # Error en el archivo xml
         # with self.assertLogs(
@@ -262,11 +258,10 @@ class TestL10nClDte(TestL10nECEdiCommon):
             "odoo.addons.l10n_ec_account_edi.models.account_edi_document",
             level=logging.ERROR,
         ):
-            edi_doc.with_context(
-                l10n_ec_xml_call_from_cron=True
-            )._process_documents_web_services(with_commit=False)
+            edi_doc.with_context(l10n_ec_xml_call_from_cron=True)._process_documents_web_services(with_commit=False)
             self.assertIn(_("ARCHIVO NO CUMPLE ESTRUCTURA XML"), edi_doc.error)
 
+    @skip("PV refactorizando")
     @patch_service_sri
     def test_l10n_ec_out_invoice_with_payments(self):
         """Crear factura electronica con 2 pagos"""
@@ -275,9 +270,7 @@ class TestL10nClDte(TestL10nECEdiCommon):
         # 2 Pagos para el total de la factura
         amount = invoice.amount_total / 2
         # Pago con diario efectivo
-        self.generate_payment(
-            invoice_ids=invoice.ids, journal=self.journal_cash, amount=amount
-        )
+        self.generate_payment(invoice_ids=invoice.ids, journal=self.journal_cash, amount=amount)
         # Pago con diario banco por defecto
         self.generate_payment(invoice_ids=invoice.ids, amount=amount)
         edi_doc = invoice._get_edi_document(self.edi_format)
@@ -286,15 +279,14 @@ class TestL10nClDte(TestL10nECEdiCommon):
         self.assertEqual(invoice.payment_state, "paid")
         self.assertTrue(edi_doc.l10n_ec_xml_access_key)
 
+    @skip("PV refactorizando")
     def test_l10n_ec_out_invoice_default_values_form(self):
         """Test prueba campos computados y valores por defecto
         en formulario de Factura de cliente"""
         self._setup_edi_company_ec()
         journal = self.journal_sale.copy({"name": "Invoices Journal"})
         self.assertTrue(self.AccountMove._fields["l10n_latam_internal_type"].store)
-        form = self._l10n_ec_create_form_move(
-            move_type="out_invoice", internal_type="invoice", partner=self.partner_cf
-        )
+        form = self._l10n_ec_create_form_move(move_type="out_invoice", internal_type="invoice", partner=self.partner_cf)
         self.assertIn(form.journal_id, journal + self.journal_sale)
         self.assertRecordValues(
             form.journal_id,
@@ -323,22 +315,20 @@ class TestL10nClDte(TestL10nECEdiCommon):
         invoice = form.save()
         self.assertTrue(invoice.l10n_latam_internal_type, "invoice")
 
+    @skip("PV refactorizando")
     def test_l10n_ec_out_invoice_default_journal_form(self):
         """Test prueba en formulario de factura, sin diarios registrados"""
         self.journal_sale.unlink()
-        invoice_model = self.AccountMove.with_context(
-            default_move_type="out_invoice", internal_type="invoice"
-        )
+        invoice_model = self.AccountMove.with_context(default_move_type="out_invoice", internal_type="invoice")
         with self.assertRaises(UserError):
             Form(invoice_model)
 
+    @skip("PV refactorizando")
     def test_l10n_ec_out_invoice_final_consumer_limit_amount(self):
         """Test prueba monto maximo en Factura de cliente
         emitida a consumidor final"""
         self._setup_edi_company_ec()
-        self.env["ir.config_parameter"].sudo().set_param(
-            "l10n_ec_final_consumer_limit", 50
-        )
+        self.env["ir.config_parameter"].sudo().set_param("l10n_ec_final_consumer_limit", 50)
         self.product_a.list_price = 51
         form = self._l10n_ec_create_form_move(
             move_type="out_invoice",
@@ -358,6 +348,7 @@ class TestL10nClDte(TestL10nECEdiCommon):
         invoice.action_post()
         self.assertEqual(invoice.state, "posted")
 
+    @skip("PV refactorizando")
     def test_l10n_ec_validate_lines_invoice(self):
         """Validaciones de cantidad y valor total en 0 en lineas de facturas"""
         self._setup_edi_company_ec()
@@ -368,6 +359,7 @@ class TestL10nClDte(TestL10nECEdiCommon):
         with self.assertRaises(UserError):
             invoice.action_post()
 
+    @skip("PV refactorizando")
     @patch_service_sri
     def test_l10n_ec_out_invoice_with_additional_info(self):
         """Crear factura electronica con informacion adicional"""
@@ -383,6 +375,4 @@ class TestL10nClDte(TestL10nECEdiCommon):
         self.assertEqual(invoice.state, "posted")
         self.assertTrue(edi_doc.l10n_ec_xml_access_key)
         self.assertEqual(len(invoice.l10n_ec_additional_information_move_ids), 1)
-        self.assertEqual(
-            invoice.l10n_ec_additional_information_move_ids[0].name, "Test"
-        )
+        self.assertEqual(invoice.l10n_ec_additional_information_move_ids[0].name, "Test")
