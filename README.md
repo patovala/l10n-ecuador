@@ -9,7 +9,10 @@
 
 # l10n-ecuador
 
-TODO: add repo description.
+# 15.0-pvfixes
+Son fixes al repo no oficiales que deberian haber ido a 15.0, tiene solo adiciones a la rama vanila 15 de la oca.
+
+
 
 <!-- /!\ do not modify below this line -->
 
