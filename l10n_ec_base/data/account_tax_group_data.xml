@@ -30,4 +30,7 @@
     <record id="l10n_ec.tax_group_outflows" model="account.tax.group">
         <field name="l10n_ec_xml_fe_code">6</field>
     </record>
+    <record id="l10n_ec.tax_group_vat_15" model="account.tax.group">
+        <field name="l10n_ec_xml_fe_code">4</field>
+    </record>
 </odoo>

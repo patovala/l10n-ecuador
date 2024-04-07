@@ -120,13 +120,59 @@ class TestL10nClDte(TestL10nECEdiCommon):
         self.assertFalse(edi_doc.edi_content)
         self.assertTrue(edi_doc.error)
 
-    # @skip("PV done")
+    @skip("PV done")
     @patch_service_sri(
         validation_response=sent_response, auth_response=success_auth_response
     )
     def test_l10n_ec_out_invoice_sri(self):
         """Crear factura electrónica, con la configuración correcta"""
         _logger.info("DEBUG test  >>>>>>>>>>>>>>>>>>")
+        # Configurar los datos previamente
+        self._setup_edi_company_ec()
+        # Compañia no obligada a llevar contabilidad
+        self._l10n_ec_edi_company_no_account()
+        invoice = self._l10n_ec_prepare_edi_out_invoice(
+            use_payment_term=False, auto_post=True
+        )
+        # Añadir pago total a la factura
+        self.generate_payment(invoice_ids=invoice.ids, journal=self.journal_cash)
+        self.assertEqual(invoice.payment_state, "paid")
+
+        edi_doc = invoice._get_edi_document(self.edi_format)
+        edi_doc._process_documents_web_services(with_commit=False)
+
+        self.assertEqual(invoice.state, "posted")
+        self.assertTrue(edi_doc.l10n_ec_xml_access_key)
+        self.assertEqual(invoice.l10n_ec_xml_access_key, edi_doc.l10n_ec_xml_access_key)
+
+        self.assertEqual(edi_doc.state, "sent")
+        self.assertEqual(
+            invoice.l10n_ec_authorization_date, edi_doc.l10n_ec_authorization_date
+        )
+        # Envio de email
+        try:
+            invoice.action_invoice_sent()
+            mail_sended = True
+        except UserError as e:
+            _logger.warning(e.name)
+            mail_sended = False
+        self.assertTrue(mail_sended)
+
+    # @skip("PV done")
+    @patch_service_sri(
+        validation_response=sent_response, auth_response=success_auth_response
+    )
+    def test_l10n_ec_out_iva_15(self):
+        """Testing new tax 15 for poor ecuadorians"""
+        _logger.info("DEBUG test  >>>>>>>>>>>>>>>>>>")
+        self.journal_cash.l10n_ec_sri_payment_id = self.env.ref("l10n_ec.P1").id
+        self.tax_sale_a.write(
+            {
+                "l10n_ec_xml_fe_code": "2",
+                "tax_group_id": self.env.ref("l10n_ec.tax_group_vat_15").id,
+            }
+        )
+
         # Configurar los datos previamente
         self._setup_edi_company_ec()
         # Compañia no obligada a llevar contabilidad
