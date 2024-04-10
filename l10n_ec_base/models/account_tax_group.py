@@ -28,5 +28,7 @@ class AccountTaxGroup(models.Model):
     _inherit = "account.tax.group"
 
     l10n_ec_type = fields.Selection(
-        _TYPE_EC, string="Type Ecuadorian Tax Updated", help="Ecuadorian taxes subtype"
+        selection_add=_TYPE_EC,
+        string="Type Ecuadorian Tax Updated",
+        help="Ecuadorian taxes subtype",
     )

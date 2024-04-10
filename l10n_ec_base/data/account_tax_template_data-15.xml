@@ -7,12 +7,9 @@
             <field name="amount_type">percent</field>
             <field name="sequence">5</field>
             <field name="amount">15</field>
-            <field name="description" />
             <field name="l10n_ec_code_base">411</field>
             <field name="l10n_ec_code_applied">421</field>
             <field name="tax_group_id">tax_group_vat_15</field>
-            <field name="l10n_ec_code_ats" />
-            <field name="descripcion" />
             <field name="active">True</field>
         </record>
         <record id="tax_vat_15_411_services" model="account.tax.template">
@@ -21,12 +18,10 @@
             <field name="amount_type">percent</field>
             <field name="sequence">5</field>
             <field name="amount">15</field>
-            <field name="description" />
             <field name="l10n_ec_code_base">411</field>
             <field name="l10n_ec_code_applied">421</field>
             <field name="tax_group_id">tax_group_vat_15</field>
             <field name="l10n_ec_code_ats" />
-            <field name="descripcion" />
             <field name="active">True</field>
         </record>
         <record id="tax_vat_15_412" model="account.tax.template">
@@ -35,7 +30,6 @@
             <field name="amount_type">percent</field>
             <field name="sequence">5</field>
             <field name="amount">15</field>
-            <field name="description" />
             <field name="l10n_ec_code_base">412</field>
             <field name="l10n_ec_code_applied">422</field>
             <field name="tax_group_id">tax_group_vat_15</field>
@@ -49,7 +43,6 @@
             <field name="amount_type">percent</field>
             <field name="sequence">115</field>
             <field name="amount">15</field>
-            <field name="description" />
             <field name="l10n_ec_code_base">444</field>
             <field name="l10n_ec_code_applied">454</field>
             <field name="tax_group_id">tax_group_vat_15</field>
@@ -63,7 +56,6 @@
             <field name="amount_type">percent</field>
             <field name="sequence">5</field>
             <field name="amount">15</field>
-            <field name="description" />
             <field name="l10n_ec_code_base">510</field>
             <field name="l10n_ec_code_applied">520</field>
             <field name="tax_group_id">tax_group_vat_15</field>
@@ -77,7 +69,6 @@
             <field name="amount_type">percent</field>
             <field name="sequence">5</field>
             <field name="amount">15</field>
-            <field name="description" />
             <field name="l10n_ec_code_base">510</field>
             <field name="l10n_ec_code_applied">520</field>
             <field name="tax_group_id">tax_group_vat_15</field>
@@ -91,7 +82,6 @@
             <field name="amount_type">percent</field>
             <field name="sequence">5</field>
             <field name="amount">15</field>
-            <field name="description" />
             <field name="l10n_ec_code_base">510</field>
             <field name="l10n_ec_code_applied">520</field>
             <field name="tax_group_id">tax_group_vat_15</field>
@@ -105,7 +95,6 @@
             <field name="amount_type">percent</field>
             <field name="sequence">5</field>
             <field name="amount">15</field>
-            <field name="description" />
             <field name="l10n_ec_code_base">510</field>
             <field name="l10n_ec_code_applied">520</field>
             <field name="tax_group_id">tax_group_vat_15</field>
@@ -119,7 +108,6 @@
             <field name="amount_type">percent</field>
             <field name="sequence">6</field>
             <field name="amount">15</field>
-            <field name="description" />
             <field name="l10n_ec_code_base">511</field>
             <field name="l10n_ec_code_applied">521</field>
             <field name="tax_group_id">tax_group_vat_15</field>
@@ -133,7 +121,6 @@
             <field name="amount_type">percent</field>
             <field name="sequence">6</field>
             <field name="amount">15</field>
-            <field name="description" />
             <field name="l10n_ec_code_base">512</field>
             <field name="l10n_ec_code_applied">522</field>
             <field name="tax_group_id">tax_group_vat_15</field>
@@ -147,7 +134,6 @@
             <field name="amount_type">percent</field>
             <field name="sequence">6</field>
             <field name="amount">15</field>
-            <field name="description" />
             <field name="l10n_ec_code_base">512</field>
             <field name="l10n_ec_code_applied">522</field>
             <field name="tax_group_id">tax_group_vat_15</field>
@@ -161,7 +147,6 @@
             <field name="amount_type">percent</field>
             <field name="sequence">6</field>
             <field name="amount">15</field>
-            <field name="description" />
             <field name="l10n_ec_code_base">512</field>
             <field name="l10n_ec_code_applied">522</field>
             <field name="tax_group_id">tax_group_vat_15</field>
@@ -175,7 +160,6 @@
             <field name="amount_type">percent</field>
             <field name="sequence">6</field>
             <field name="amount">15</field>
-            <field name="description" />
             <field name="l10n_ec_code_base">513</field>
             <field name="l10n_ec_code_applied">523</field>
             <field name="tax_group_id">tax_group_vat_15</field>
@@ -189,7 +173,6 @@
             <field name="amount_type">percent</field>
             <field name="sequence">6</field>
             <field name="amount">15</field>
-            <field name="description" />
             <field name="l10n_ec_code_base">514</field>
             <field name="l10n_ec_code_applied">524</field>
             <field name="tax_group_id">tax_group_vat_15</field>
@@ -203,7 +186,6 @@
             <field name="amount_type">percent</field>
             <field name="sequence">6</field>
             <field name="amount">15</field>
-            <field name="description" />
             <field name="l10n_ec_code_base">515</field>
             <field name="l10n_ec_code_applied">525</field>
             <field name="tax_group_id">tax_group_vat_15</field>
@@ -217,7 +199,6 @@
             <field name="amount_type">percent</field>
             <field name="sequence">6</field>
             <field name="amount">15</field>
-            <field name="description" />
             <field name="l10n_ec_code_base">545</field>
             <field name="l10n_ec_code_applied">555</field>
             <field name="tax_group_id">tax_group_vat_15</field>
@@ -231,7 +212,6 @@
             <field name="amount_type">percent</field>
             <field name="sequence">6</field>
             <field name="amount">15</field>
-            <field name="description" />
             <field name="l10n_ec_code_base">545</field>
             <field name="l10n_ec_code_applied">555</field>
             <field name="tax_group_id">tax_group_vat_15</field>
@@ -245,7 +225,6 @@
             <field name="amount_type">percent</field>
             <field name="sequence">70</field>
             <field name="amount" />
-            <field name="description">15</field>
             <field name="l10n_ec_code_base" />
             <field name="l10n_ec_code_applied" />
             <field name="tax_group_id">tax_group_withhold_income_sale</field>
