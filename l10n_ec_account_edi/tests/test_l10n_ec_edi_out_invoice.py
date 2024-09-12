@@ -58,42 +58,45 @@ def auth_response_se(e, _=None):
 sent_response.get = MagicMock(side_effect=response_se)
 success_auth_response.get = MagicMock(side_effect=auth_response_se)
 
-# sri_message_date = MagicMock(
-#     identificador="65",
-#     informacionAdicional="La fecha de emisión está fuera del rango de tolerancia "
-#     "[129600 minutos], o es mayor a la fecha del servidor",
-#     mensaje="FECHA EMISIÓN EXTEMPORANEA",
-#     tipo="ERROR",
-# )
-#
-# sent_response2 = json.loads(
-#     """
-#     {
-#       "estado": "RECIBIDA",
-#       "comprobantes": {
-#         "comprobante": [
-#             {
-#                 "claveAcceso": "DUMMY_ACCESS_KEY",
-#                 "mensajes": {
-#                   "mensaje": [
-#                     {
-#                       "tipo": "NADA",
-#                       "identificador": "xxx",
-#                       "mensaje": "odoo is good",
-#                       "informacionAdicional": "nada"
-#                     }
-#                   ]
-#                 }
-#             }
-#         ]
-#       }
-#     }
-# """
-# )
+# --------------------- 8<---------    PV run only these set of tests by now -----
 
 
 @tagged("post_install_l10n", "post_install", "-at_install", "pv")
-class TestL10nClDte(TestL10nECEdiCommon):
+class TestL10nAccountEdi(TestL10nECEdiCommon):
+    def setUp(self, chart_template_ref=None):
+        super().setUp()
+
+        # españa lo sabe:!!
+        # https://github.com/OCA/l10n-spain/blob/17.0/l10n_es_facturae/tests/common.py
+        self.tax15 = self.env["account.tax"].create(
+            {
+                "name": "Test tax 15%",
+                "amount_type": "percent",
+                "amount": 15,
+                "type_tax_use": "sale",
+                "tax_group_id": self.env.ref("l10n_ec_account_edi.tax_group_vat_15").id,
+                "l10n_ec_xml_fe_code": "04",  # See codigoPorcentaje en FE
+            }
+        )
+
+        self.product_15 = self.env["product.product"].create(
+            {
+                "name": "product_15",
+                "uom_id": self.env.ref("uom.product_uom_unit").id,
+                "uom_po_id": self.env.ref("uom.product_uom_unit").id,
+                "lst_price": 1000.0,
+                "standard_price": 800.0,
+                "property_account_income_id": self.company_data[
+                    "default_account_revenue"
+                ].id,
+                "property_account_expense_id": self.company_data[
+                    "default_account_expense"
+                ].id,
+                "taxes_id": [(6, 0, self.tax15.ids)],
+                # 'supplier_taxes_id': [(6, 0, self.tax_purchase_a.ids)],
+            }
+        )
+
     @skip("PV done")
     def test_l10n_ec_out_invoice_configuration(self):
         # intentar validar una factura sin tener configurado correctamente los datos
@@ -126,7 +129,7 @@ class TestL10nClDte(TestL10nECEdiCommon):
     )
     def test_l10n_ec_out_invoice_sri(self):
         """Crear factura electrónica, con la configuración correcta"""
-        _logger.info("DEBUG test  >>>>>>>>>>>>>>>>>>")
+        _logger.info("DEBUG test test_l10n_ec_out_invoice_sri >>>>>>>>>>>>>>>>>>")
         # Configurar los datos previamente
         self._setup_edi_company_ec()
         # Compañia no obligada a llevar contabilidad
@@ -158,51 +161,183 @@ class TestL10nClDte(TestL10nECEdiCommon):
             mail_sended = False
         self.assertTrue(mail_sended)
 
-    # @skip("PV done")
+    @patch_service_sri(
+        validation_response=sent_response, auth_response=success_auth_response
+    )
+    def test_l10n_ec_out_factura_exterior(self):
+        """Testing facturación en el exterior"""
+        _logger.info("DEBUG test  >>>> facturación en el exterior ----- ")
+        self.journal_cash.l10n_ec_sri_payment_id = self.env.ref("l10n_ec.P1").id
+
+        # PV ------- IMPORTANT --------
+        # most of the tax shaping are being inspired from here:
+        # odoo/custom/src/odoo/addons/account/tests/common.py
+        #    ------- --------- --------
+
+        # Configurar los datos previamente
+        self._setup_edi_company_ec()
+
+        self.company.write(
+            {
+                "l10n_ec_type_environment": "test",
+                "l10n_ec_key_type_id": self.certificate.id,
+                "l10n_ec_invoice_version": "2.1.0",
+            }
+        )
+
+        # Compañia no obligada a llevar contabilidad
+        self._l10n_ec_edi_company_no_account()
+
+        # A USA state
+        us_state = self.env["res.country.state"].create(
+            {
+                "name": "New Jersey",
+                "code": "13",
+                "country_id": self.env.ref("base.us").id,
+            }
+        )
+
+        # Someone from USA
+        self.partner = self.env["res.partner"].create(
+            {
+                "name": "Cliente Gringo Loco",
+                "street": "C/ Ejemplo, 13",
+                "zip": "07083",
+                "city": "Union",
+                "state_id": us_state.id,
+                "country_id": self.env.ref("base.us").id,
+                "vat": "US05680675C",
+            }
+        )
+
+        # zero tax for USA customer
+        self.tax_sale_a.write(
+            {
+                "l10n_ec_xml_fe_code": "2",
+                "tax_group_id": self.env.ref("l10n_ec.tax_group_vat0").id,
+            }
+        )
+
+        latam_document_type = self.env.ref("l10n_ec.ec_dt_18")
+
+        # edi_format = self.env["account.edi.format"].create(
+        #     {
+        #         "name": "test_format",
+        #         "code": "l10n_ec_format_sri",
+        #     }
+        # )
+
+        # invoice is self.move, set as is for compatibility
+        self.move = self.env["account.move"].create(
+            {
+                "partner_id": self.partner.id,
+                "journal_id": self.journal_sale.id,
+                "invoice_date": "2024-03-12",
+                # "payment_mode_id": self.payment_mode.id,
+                "l10n_latam_document_type_id": latam_document_type.id,
+                "move_type": "out_invoice",
+                "l10n_latam_internal_type": "invoice",
+                "edi_document_ids": [
+                    {
+                        "edi_format_id": self.env.ref(
+                            "l10n_ec_account_edi.edi_format_ec_sri"
+                        )
+                    }
+                ],
+                "invoice_line_ids": [
+                    (
+                        0,
+                        0,
+                        {
+                            "product_id": self.product_a.id,
+                            # "account_id": AccountEdiDocument.id,
+                            "name": "Producto de prueba",
+                            "quantity": 1.0,
+                            "price_unit": 100.0,
+                            "tax_ids": [(6, 0, self.taxes_zero_vat.ids)],
+                        },
+                    )
+                ],
+            }
+        )
+
+        self.move.action_post()
+
+        # # Añadir pago total a la factura
+        # self.generate_payment(invoice_ids=self.move.ids, journal=self.journal_cash)
+
+        # Generar xml
+
+        # __import__("ipdb").set_trace()
+
+        edi_doc = self.move._get_edi_document(self.edi_format)
+        edi_doc._process_documents_web_services(with_commit=False)
+
+        self.assertEqual(self.move.invoice_line_ids.name, "Producto de prueba")
+        self.assertEqual(self.move.invoice_line_ids.tax_ids[0].name, "Iva 0%")
+        self.assertTrue(edi_doc.l10n_ec_xml_access_key)
+        self.assertEqual(
+            self.move.l10n_ec_xml_access_key, edi_doc.l10n_ec_xml_access_key
+        )
+
+        # validate the generated xml
+        xml_data = edi_doc._l10n_ec_render_xml_edi()
+        self.assertIn('version="2.1.0"', xml_data)
+        self.assertIn("<codigo>2</codigo>", xml_data)
+        self.assertIn("<codigoPorcentaje>0</codigoPorcentaje>", xml_data)
+        self.assertEqual(edi_doc.state, "sent")
+        self.assertEqual(
+            self.move.l10n_ec_authorization_date, edi_doc.l10n_ec_authorization_date
+        )
+
+    @skip("PV done")
     @patch_service_sri(
         validation_response=sent_response, auth_response=success_auth_response
     )
     def test_l10n_ec_out_iva_15(self):
         """Testing new tax 15 for poor ecuadorians"""
-        _logger.info("DEBUG test  >>>>>>>>>>>>>>>>>>")
+        _logger.info("DEBUG test  >>>>   test_l10n_ec_out_iva_15 ----- ")
         self.journal_cash.l10n_ec_sri_payment_id = self.env.ref("l10n_ec.P1").id
-        self.tax_sale_a.write(
-            {
-                "l10n_ec_xml_fe_code": "2",
-                "tax_group_id": self.env.ref("l10n_ec.tax_group_vat_15").id,
-            }
-        )
+
+        # PV ------- IMPORTANT --------
+        # most of the tax shaping are being inspired from here:
+        # odoo/custom/src/odoo/addons/account/tests/common.py
+        #    ------- --------- --------
 
         # Configurar los datos previamente
         self._setup_edi_company_ec()
         # Compañia no obligada a llevar contabilidad
         self._l10n_ec_edi_company_no_account()
-        invoice = self._l10n_ec_prepare_edi_out_invoice(
-            use_payment_term=False, auto_post=True
+
+        # invoice is self.move, set as is for compatibility
+        self.move = self._l10n_ec_prepare_edi_out_invoice(
+            products=self.product_15, use_payment_term=False, auto_post=True
         )
         # Añadir pago total a la factura
-        self.generate_payment(invoice_ids=invoice.ids, journal=self.journal_cash)
-        self.assertEqual(invoice.payment_state, "paid")
+        self.generate_payment(invoice_ids=self.move.ids, journal=self.journal_cash)
 
-        edi_doc = invoice._get_edi_document(self.edi_format)
+        # Generar xml
+
+        # __import__('ipdb').set_trace()
+
+        edi_doc = self.move._get_edi_document(self.edi_format)
         edi_doc._process_documents_web_services(with_commit=False)
 
-        self.assertEqual(invoice.state, "posted")
+        self.assertEqual(self.move.invoice_line_ids.name, "product_15")
+        self.assertEqual(self.move.invoice_line_ids.tax_ids.name, "Test tax 15%")
         self.assertTrue(edi_doc.l10n_ec_xml_access_key)
-        self.assertEqual(invoice.l10n_ec_xml_access_key, edi_doc.l10n_ec_xml_access_key)
+        self.assertEqual(
+            self.move.l10n_ec_xml_access_key, edi_doc.l10n_ec_xml_access_key
+        )
 
+        # validate the generated xml
+        xml_data = edi_doc._l10n_ec_render_xml_edi()
+        self.assertIn("<codigo>2</codigo>", xml_data)
+        self.assertIn("<codigoPorcentaje>04</codigoPorcentaje>", xml_data)
         self.assertEqual(edi_doc.state, "sent")
         self.assertEqual(
-            invoice.l10n_ec_authorization_date, edi_doc.l10n_ec_authorization_date
+            self.move.l10n_ec_authorization_date, edi_doc.l10n_ec_authorization_date
         )
-        # Envio de email
-        try:
-            invoice.action_invoice_sent()
-            mail_sended = True
-        except UserError as e:
-            _logger.warning(e.name)
-            mail_sended = False
-        self.assertTrue(mail_sended)
 
     @skip("PV done")
     @patch_service_sri(

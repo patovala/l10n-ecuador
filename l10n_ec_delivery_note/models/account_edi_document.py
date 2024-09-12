@@ -170,6 +170,8 @@ class AccountEdiDocument(models.Model):
         return len(all_jobs) - len(jobs_to_process)
 
     def _l10n_ec_render_xml_edi(self):
+        __import__("ipdb").set_trace()
+
         if self.move_id:
             return super()._l10n_ec_render_xml_edi()
         ViewModel = self.env["ir.ui.view"].sudo()

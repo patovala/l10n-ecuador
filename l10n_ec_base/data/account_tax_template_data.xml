@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<odoo noupdate="1">
+<odoo>
     <record id="l10n_ec.tax_vat_411" model="account.tax.template">
         <field name="l10n_ec_xml_fe_code">2</field>
     </record>
@@ -66,6 +66,7 @@
     <record id="l10n_ec.tax_vat_545" model="account.tax.template">
         <field name="l10n_ec_xml_fe_code">2</field>
     </record>
+
     <record id="l10n_ec.tax_withhold_vat_10" model="account.tax.template">
         <field name="l10n_ec_xml_fe_code">9</field>
     </record>
