@@ -1,236 +1,234 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<odoo>
-    <data noupdate="1">
-        <record id="tax_vat_15_411_goods" model="account.tax.template">
-            <field name="name">VAT 15% G</field>
-            <field name="type_tax_use">sale</field>
-            <field name="amount_type">percent</field>
-            <field name="sequence">5</field>
-            <field name="amount">15</field>
-            <field name="l10n_ec_code_base">411</field>
-            <field name="l10n_ec_code_applied">421</field>
-            <field name="tax_group_id">tax_group_vat_15</field>
-            <field name="active">True</field>
-        </record>
-        <record id="tax_vat_15_411_services" model="account.tax.template">
-            <field name="name">VAT 15% S</field>
-            <field name="type_tax_use">sale</field>
-            <field name="amount_type">percent</field>
-            <field name="sequence">5</field>
-            <field name="amount">15</field>
-            <field name="l10n_ec_code_base">411</field>
-            <field name="l10n_ec_code_applied">421</field>
-            <field name="tax_group_id">tax_group_vat_15</field>
-            <field name="l10n_ec_code_ats" />
-            <field name="active">True</field>
-        </record>
-        <record id="tax_vat_15_412" model="account.tax.template">
-            <field name="name">VAT</field>
-            <field name="type_tax_use">sale</field>
-            <field name="amount_type">percent</field>
-            <field name="sequence">5</field>
-            <field name="amount">15</field>
-            <field name="l10n_ec_code_base">412</field>
-            <field name="l10n_ec_code_applied">422</field>
-            <field name="tax_group_id">tax_group_vat_15</field>
-            <field name="l10n_ec_code_ats" />
-            <field name="descripcion" />
-            <field name="active">True</field>
-        </record>
-        <record id="tax_vat_15_444" model="account.tax.template">
-            <field name="name">VAT</field>
-            <field name="type_tax_use">sale</field>
-            <field name="amount_type">percent</field>
-            <field name="sequence">115</field>
-            <field name="amount">15</field>
-            <field name="l10n_ec_code_base">444</field>
-            <field name="l10n_ec_code_applied">454</field>
-            <field name="tax_group_id">tax_group_vat_15</field>
-            <field name="l10n_ec_code_ats" />
-            <field name="descripcion" />
-            <field name="active">True</field>
-        </record>
-        <record id="tax_vat_15_510_sup_01" model="account.tax.template">
-            <field name="name">VAT</field>
-            <field name="type_tax_use">purchase</field>
-            <field name="amount_type">percent</field>
-            <field name="sequence">5</field>
-            <field name="amount">15</field>
-            <field name="l10n_ec_code_base">510</field>
-            <field name="l10n_ec_code_applied">520</field>
-            <field name="tax_group_id">tax_group_vat_15</field>
-            <field name="l10n_ec_code_ats" />
-            <field name="descripcion" />
-            <field name="active">True</field>
-        </record>
-        <record id="tax_vat_15_510_sup_05" model="account.tax.template">
-            <field name="name">VAT</field>
-            <field name="type_tax_use">purchase</field>
-            <field name="amount_type">percent</field>
-            <field name="sequence">5</field>
-            <field name="amount">15</field>
-            <field name="l10n_ec_code_base">510</field>
-            <field name="l10n_ec_code_applied">520</field>
-            <field name="tax_group_id">tax_group_vat_15</field>
-            <field name="l10n_ec_code_ats" />
-            <field name="descripcion" />
-            <field name="active">True</field>
-        </record>
-        <record id="tax_vat_15_510_sup_06" model="account.tax.template">
-            <field name="name">VAT</field>
-            <field name="type_tax_use">purchase</field>
-            <field name="amount_type">percent</field>
-            <field name="sequence">5</field>
-            <field name="amount">15</field>
-            <field name="l10n_ec_code_base">510</field>
-            <field name="l10n_ec_code_applied">520</field>
-            <field name="tax_group_id">tax_group_vat_15</field>
-            <field name="l10n_ec_code_ats" />
-            <field name="descripcion" />
-            <field name="active">True</field>
-        </record>
-        <record id="tax_vat_15_510_sup_15" model="account.tax.template">
-            <field name="name">VAT</field>
-            <field name="type_tax_use">purchase</field>
-            <field name="amount_type">percent</field>
-            <field name="sequence">5</field>
-            <field name="amount">15</field>
-            <field name="l10n_ec_code_base">510</field>
-            <field name="l10n_ec_code_applied">520</field>
-            <field name="tax_group_id">tax_group_vat_15</field>
-            <field name="l10n_ec_code_ats" />
-            <field name="descripcion" />
-            <field name="active">True</field>
-        </record>
-        <record id="tax_vat_15_511_sup_03" model="account.tax.template">
-            <field name="name">VAT</field>
-            <field name="type_tax_use">purchase</field>
-            <field name="amount_type">percent</field>
-            <field name="sequence">6</field>
-            <field name="amount">15</field>
-            <field name="l10n_ec_code_base">511</field>
-            <field name="l10n_ec_code_applied">521</field>
-            <field name="tax_group_id">tax_group_vat_15</field>
-            <field name="l10n_ec_code_ats" />
-            <field name="descripcion" />
-            <field name="active">True</field>
-        </record>
-        <record id="tax_vat_15_512_sup_04" model="account.tax.template">
-            <field name="name">VAT</field>
-            <field name="type_tax_use">purchase</field>
-            <field name="amount_type">percent</field>
-            <field name="sequence">6</field>
-            <field name="amount">15</field>
-            <field name="l10n_ec_code_base">512</field>
-            <field name="l10n_ec_code_applied">522</field>
-            <field name="tax_group_id">tax_group_vat_15</field>
-            <field name="l10n_ec_code_ats" />
-            <field name="descripcion" />
-            <field name="active">True</field>
-        </record>
-        <record id="tax_vat_15_512_sup_05" model="account.tax.template">
-            <field name="name">VAT</field>
-            <field name="type_tax_use">purchase</field>
-            <field name="amount_type">percent</field>
-            <field name="sequence">6</field>
-            <field name="amount">15</field>
-            <field name="l10n_ec_code_base">512</field>
-            <field name="l10n_ec_code_applied">522</field>
-            <field name="tax_group_id">tax_group_vat_15</field>
-            <field name="l10n_ec_code_ats" />
-            <field name="descripcion" />
-            <field name="active">True</field>
-        </record>
-        <record id="tax_vat_15_512_sup_07" model="account.tax.template">
-            <field name="name">VAT</field>
-            <field name="type_tax_use">purchase</field>
-            <field name="amount_type">percent</field>
-            <field name="sequence">6</field>
-            <field name="amount">15</field>
-            <field name="l10n_ec_code_base">512</field>
-            <field name="l10n_ec_code_applied">522</field>
-            <field name="tax_group_id">tax_group_vat_15</field>
-            <field name="l10n_ec_code_ats" />
-            <field name="descripcion" />
-            <field name="active">True</field>
-        </record>
-        <record id="tax_vat_15_513_sup_01" model="account.tax.template">
-            <field name="name">VAT</field>
-            <field name="type_tax_use">purchase</field>
-            <field name="amount_type">percent</field>
-            <field name="sequence">6</field>
-            <field name="amount">15</field>
-            <field name="l10n_ec_code_base">513</field>
-            <field name="l10n_ec_code_applied">523</field>
-            <field name="tax_group_id">tax_group_vat_15</field>
-            <field name="l10n_ec_code_ats" />
-            <field name="descripcion" />
-            <field name="active">True</field>
-        </record>
-        <record id="tax_vat_15_514_sup_06" model="account.tax.template">
-            <field name="name">VAT</field>
-            <field name="type_tax_use">purchase</field>
-            <field name="amount_type">percent</field>
-            <field name="sequence">6</field>
-            <field name="amount">15</field>
-            <field name="l10n_ec_code_base">514</field>
-            <field name="l10n_ec_code_applied">524</field>
-            <field name="tax_group_id">tax_group_vat_15</field>
-            <field name="l10n_ec_code_ats" />
-            <field name="descripcion" />
-            <field name="active">True</field>
-        </record>
-        <record id="tax_vat_15_515_sup_03" model="account.tax.template">
-            <field name="name">VAT</field>
-            <field name="type_tax_use">purchase</field>
-            <field name="amount_type">percent</field>
-            <field name="sequence">6</field>
-            <field name="amount">15</field>
-            <field name="l10n_ec_code_base">515</field>
-            <field name="l10n_ec_code_applied">525</field>
-            <field name="tax_group_id">tax_group_vat_15</field>
-            <field name="l10n_ec_code_ats" />
-            <field name="descripcion" />
-            <field name="active">True</field>
-        </record>
-        <record id="tax_vat_15_545_sup_08" model="account.tax.template">
-            <field name="name">VAT</field>
-            <field name="type_tax_use">purchase</field>
-            <field name="amount_type">percent</field>
-            <field name="sequence">6</field>
-            <field name="amount">15</field>
-            <field name="l10n_ec_code_base">545</field>
-            <field name="l10n_ec_code_applied">555</field>
-            <field name="tax_group_id">tax_group_vat_15</field>
-            <field name="l10n_ec_code_ats" />
-            <field name="descripcion" />
-            <field name="active">True</field>
-        </record>
-        <record id="tax_vat_15_545_sup_09" model="account.tax.template">
-            <field name="name">VAT</field>
-            <field name="type_tax_use">purchase</field>
-            <field name="amount_type">percent</field>
-            <field name="sequence">6</field>
-            <field name="amount">15</field>
-            <field name="l10n_ec_code_base">545</field>
-            <field name="l10n_ec_code_applied">555</field>
-            <field name="tax_group_id">tax_group_vat_15</field>
-            <field name="l10n_ec_code_ats" />
-            <field name="descripcion" />
-            <field name="active">True</field>
-        </record>
-        <record id="tax_withhold_profit_sale_15x100" model="account.tax.template">
-            <field name="name">15</field>
-            <field name="type_tax_use">none</field>
-            <field name="amount_type">percent</field>
-            <field name="sequence">70</field>
-            <field name="amount" />
-            <field name="l10n_ec_code_base" />
-            <field name="l10n_ec_code_applied" />
-            <field name="tax_group_id">tax_group_withhold_income_sale</field>
-            <field name="l10n_ec_code_ats" />
-            <field name="descripcion">15</field>
-            <field name="active">True</field>
-        </record>
-    </data>
+<odoo noupdate="1">
+    <record id="tax_vat_15_411_goods" model="account.tax.template">
+        <field name="name">VAT 15% G</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="sequence">5</field>
+        <field name="amount">15</field>
+        <field name="l10n_ec_code_base">411</field>
+        <field name="l10n_ec_code_applied">421</field>
+        <field name="tax_group_id">tax_group_vat_15</field>
+        <field name="active">True</field>
+    </record>
+    <record id="tax_vat_15_411_services" model="account.tax.template">
+        <field name="name">VAT 15% S</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="sequence">5</field>
+        <field name="amount">15</field>
+        <field name="l10n_ec_code_base">411</field>
+        <field name="l10n_ec_code_applied">421</field>
+        <field name="tax_group_id">tax_group_vat_15</field>
+        <field name="l10n_ec_code_ats" />
+        <field name="active">True</field>
+    </record>
+    <record id="tax_vat_15_412" model="account.tax.template">
+        <field name="name">VAT</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="sequence">5</field>
+        <field name="amount">15</field>
+        <field name="l10n_ec_code_base">412</field>
+        <field name="l10n_ec_code_applied">422</field>
+        <field name="tax_group_id">tax_group_vat_15</field>
+        <field name="l10n_ec_code_ats" />
+        <field name="descripcion" />
+        <field name="active">True</field>
+    </record>
+    <record id="tax_vat_15_444" model="account.tax.template">
+        <field name="name">VAT</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="sequence">115</field>
+        <field name="amount">15</field>
+        <field name="l10n_ec_code_base">444</field>
+        <field name="l10n_ec_code_applied">454</field>
+        <field name="tax_group_id">tax_group_vat_15</field>
+        <field name="l10n_ec_code_ats" />
+        <field name="descripcion" />
+        <field name="active">True</field>
+    </record>
+    <record id="tax_vat_15_510_sup_01" model="account.tax.template">
+        <field name="name">VAT</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="sequence">5</field>
+        <field name="amount">15</field>
+        <field name="l10n_ec_code_base">510</field>
+        <field name="l10n_ec_code_applied">520</field>
+        <field name="tax_group_id">tax_group_vat_15</field>
+        <field name="l10n_ec_code_ats" />
+        <field name="descripcion" />
+        <field name="active">True</field>
+    </record>
+    <record id="tax_vat_15_510_sup_05" model="account.tax.template">
+        <field name="name">VAT</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="sequence">5</field>
+        <field name="amount">15</field>
+        <field name="l10n_ec_code_base">510</field>
+        <field name="l10n_ec_code_applied">520</field>
+        <field name="tax_group_id">tax_group_vat_15</field>
+        <field name="l10n_ec_code_ats" />
+        <field name="descripcion" />
+        <field name="active">True</field>
+    </record>
+    <record id="tax_vat_15_510_sup_06" model="account.tax.template">
+        <field name="name">VAT</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="sequence">5</field>
+        <field name="amount">15</field>
+        <field name="l10n_ec_code_base">510</field>
+        <field name="l10n_ec_code_applied">520</field>
+        <field name="tax_group_id">tax_group_vat_15</field>
+        <field name="l10n_ec_code_ats" />
+        <field name="descripcion" />
+        <field name="active">True</field>
+    </record>
+    <record id="tax_vat_15_510_sup_15" model="account.tax.template">
+        <field name="name">VAT</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="sequence">5</field>
+        <field name="amount">15</field>
+        <field name="l10n_ec_code_base">510</field>
+        <field name="l10n_ec_code_applied">520</field>
+        <field name="tax_group_id">tax_group_vat_15</field>
+        <field name="l10n_ec_code_ats" />
+        <field name="descripcion" />
+        <field name="active">True</field>
+    </record>
+    <record id="tax_vat_15_511_sup_03" model="account.tax.template">
+        <field name="name">VAT</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="sequence">6</field>
+        <field name="amount">15</field>
+        <field name="l10n_ec_code_base">511</field>
+        <field name="l10n_ec_code_applied">521</field>
+        <field name="tax_group_id">tax_group_vat_15</field>
+        <field name="l10n_ec_code_ats" />
+        <field name="descripcion" />
+        <field name="active">True</field>
+    </record>
+    <record id="tax_vat_15_512_sup_04" model="account.tax.template">
+        <field name="name">VAT</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="sequence">6</field>
+        <field name="amount">15</field>
+        <field name="l10n_ec_code_base">512</field>
+        <field name="l10n_ec_code_applied">522</field>
+        <field name="tax_group_id">tax_group_vat_15</field>
+        <field name="l10n_ec_code_ats" />
+        <field name="descripcion" />
+        <field name="active">True</field>
+    </record>
+    <record id="tax_vat_15_512_sup_05" model="account.tax.template">
+        <field name="name">VAT</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="sequence">6</field>
+        <field name="amount">15</field>
+        <field name="l10n_ec_code_base">512</field>
+        <field name="l10n_ec_code_applied">522</field>
+        <field name="tax_group_id">tax_group_vat_15</field>
+        <field name="l10n_ec_code_ats" />
+        <field name="descripcion" />
+        <field name="active">True</field>
+    </record>
+    <record id="tax_vat_15_512_sup_07" model="account.tax.template">
+        <field name="name">VAT</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="sequence">6</field>
+        <field name="amount">15</field>
+        <field name="l10n_ec_code_base">512</field>
+        <field name="l10n_ec_code_applied">522</field>
+        <field name="tax_group_id">tax_group_vat_15</field>
+        <field name="l10n_ec_code_ats" />
+        <field name="descripcion" />
+        <field name="active">True</field>
+    </record>
+    <record id="tax_vat_15_513_sup_01" model="account.tax.template">
+        <field name="name">VAT</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="sequence">6</field>
+        <field name="amount">15</field>
+        <field name="l10n_ec_code_base">513</field>
+        <field name="l10n_ec_code_applied">523</field>
+        <field name="tax_group_id">tax_group_vat_15</field>
+        <field name="l10n_ec_code_ats" />
+        <field name="descripcion" />
+        <field name="active">True</field>
+    </record>
+    <record id="tax_vat_15_514_sup_06" model="account.tax.template">
+        <field name="name">VAT</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="sequence">6</field>
+        <field name="amount">15</field>
+        <field name="l10n_ec_code_base">514</field>
+        <field name="l10n_ec_code_applied">524</field>
+        <field name="tax_group_id">tax_group_vat_15</field>
+        <field name="l10n_ec_code_ats" />
+        <field name="descripcion" />
+        <field name="active">True</field>
+    </record>
+    <record id="tax_vat_15_515_sup_03" model="account.tax.template">
+        <field name="name">VAT</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="sequence">6</field>
+        <field name="amount">15</field>
+        <field name="l10n_ec_code_base">515</field>
+        <field name="l10n_ec_code_applied">525</field>
+        <field name="tax_group_id">tax_group_vat_15</field>
+        <field name="l10n_ec_code_ats" />
+        <field name="descripcion" />
+        <field name="active">True</field>
+    </record>
+    <record id="tax_vat_15_545_sup_08" model="account.tax.template">
+        <field name="name">VAT</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="sequence">6</field>
+        <field name="amount">15</field>
+        <field name="l10n_ec_code_base">545</field>
+        <field name="l10n_ec_code_applied">555</field>
+        <field name="tax_group_id">tax_group_vat_15</field>
+        <field name="l10n_ec_code_ats" />
+        <field name="descripcion" />
+        <field name="active">True</field>
+    </record>
+    <record id="tax_vat_15_545_sup_09" model="account.tax.template">
+        <field name="name">VAT</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="sequence">6</field>
+        <field name="amount">15</field>
+        <field name="l10n_ec_code_base">545</field>
+        <field name="l10n_ec_code_applied">555</field>
+        <field name="tax_group_id">tax_group_vat_15</field>
+        <field name="l10n_ec_code_ats" />
+        <field name="descripcion" />
+        <field name="active">True</field>
+    </record>
+    <record id="tax_withhold_profit_sale_15x100" model="account.tax.template">
+        <field name="name">15</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="sequence">70</field>
+        <field name="amount" />
+        <field name="l10n_ec_code_base" />
+        <field name="l10n_ec_code_applied" />
+        <field name="tax_group_id">tax_group_withhold_income_sale</field>
+        <field name="l10n_ec_code_ats" />
+        <field name="descripcion">15</field>
+        <field name="active">True</field>
+    </record>
 </odoo>
