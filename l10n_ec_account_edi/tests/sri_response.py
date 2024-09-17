@@ -1,13 +1,11 @@
-from datetime import datetime
 import json
-from unittest.mock import create_autospec, patch, MagicMock
+from datetime import datetime
+from unittest.mock import MagicMock, create_autospec, patch
 
 from zeep import Client
 from zeep.transports import Transport
 
-from odoo.addons.l10n_ec_account_edi.models.account_edi_format import (
-    AccountEdiFormat,
-)
+from odoo.addons.l10n_ec_account_edi.models.account_edi_format import AccountEdiFormat
 
 mock_type_factory = MagicMock()
 ws_url = "https://any.fake.url"
@@ -150,10 +148,14 @@ def patch_service_sri(*args, **kwargs):
 
     def wrapper(func):
         def patched(self, *func_args, **func_kwargs):
-            validation_response = kwargs.get("validation_response", validation_sri_response)
+            validation_response = kwargs.get(
+                "validation_response", validation_sri_response
+            )
             auth_response = kwargs.get("auth_response", autorizadoObj)
             mock_client = _mock_create_client(validation_response, auth_response)
-            with patch.object(AccountEdiFormat, "_l10n_ec_get_edi_ws_client", return_value=mock_client):
+            with patch.object(
+                AccountEdiFormat, "_l10n_ec_get_edi_ws_client", return_value=mock_client
+            ):
                 return func(self, *func_args, **func_kwargs)
 
         return patched

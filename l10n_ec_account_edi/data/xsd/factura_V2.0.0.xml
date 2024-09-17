@@ -1,7 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<factura xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
- xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:noNamespaceSchemaLocation="file:/C:/borrar/xsd/110-xsd-1_V2.0.0.xsd" id="comprobante" version="version0">
+<?xml version="1.0" encoding="UTF-8" ?>
+<factura
+    xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="file:/C:/borrar/xsd/110-xsd-1_V2.0.0.xsd"
+    id="comprobante"
+    version="version0"
+>
     <infoTributaria>
         <ambiente>1</ambiente>
         <tipoEmision>1</tipoEmision>
@@ -23,7 +27,7 @@
         <contribuyenteEspecial>contribuyente</contribuyenteEspecial>
         <obligadoContabilidad>SI</obligadoContabilidad>
         <comercioExterior>EXPORTADOR</comercioExterior>
-        <incoTermFactura></incoTermFactura>
+        <incoTermFactura />
         <lugarIncoTerm>lugarIncoTerm0</lugarIncoTerm>
         <paisOrigen>000</paisOrigen>
         <puertoEmbarque>puertoEmbarque0</puertoEmbarque>
@@ -37,7 +41,7 @@
         <direccionComprador>direccionComprador0</direccionComprador>
         <totalSinImpuestos>50.00</totalSinImpuestos>
         <totalSubsidio>50.00</totalSubsidio>
-        <incoTermTotalSinImpuestos></incoTermTotalSinImpuestos>
+        <incoTermTotalSinImpuestos />
         <totalDescuento>0.00</totalDescuento>
         <codDocReembolso>00</codDocReembolso>
         <totalComprobantesReembolso>50.00</totalComprobantesReembolso>
@@ -112,8 +116,8 @@
             <descuento>50.00</descuento>
             <precioTotalSinImpuesto>50.00</precioTotalSinImpuesto>
             <detallesAdicionales>
-                <detAdicional nombre="nombre0" valor="valor0"/>
-                <detAdicional nombre="nombre1" valor="valor1"/>
+                <detAdicional nombre="nombre0" valor="valor0" />
+                <detAdicional nombre="nombre1" valor="valor1" />
             </detallesAdicionales>
             <impuestos>
                 <impuesto>
@@ -143,8 +147,8 @@
             <descuento>50.00</descuento>
             <precioTotalSinImpuesto>50.00</precioTotalSinImpuesto>
             <detallesAdicionales>
-                <detAdicional nombre="nombre2" valor="valor2"/>
-                <detAdicional nombre="nombre3" valor="valor3"/>
+                <detAdicional nombre="nombre2" valor="valor2" />
+                <detAdicional nombre="nombre3" valor="valor3" />
             </detallesAdicionales>
             <impuestos>
                 <impuesto>
@@ -166,8 +170,10 @@
     </detalles>
     <reembolsos>
         <reembolsoDetalle>
-            <tipoIdentificacionProveedorReembolso>04</tipoIdentificacionProveedorReembolso>
-            <identificacionProveedorReembolso>identificacionProvee</identificacionProveedorReembolso>
+            <tipoIdentificacionProveedorReembolso
+            >04</tipoIdentificacionProveedorReembolso>
+            <identificacionProveedorReembolso
+            >identificacionProvee</identificacionProveedorReembolso>
             <codPaisPagoProveedorReembolso>000</codPaisPagoProveedorReembolso>
             <tipoProveedorReembolso>01</tipoProveedorReembolso>
             <codDocReembolso>00</codDocReembolso>
@@ -206,8 +212,10 @@
             </compensacionesReembolso>
         </reembolsoDetalle>
         <reembolsoDetalle>
-            <tipoIdentificacionProveedorReembolso>04</tipoIdentificacionProveedorReembolso>
-            <identificacionProveedorReembolso>identificacionProvee</identificacionProveedorReembolso>
+            <tipoIdentificacionProveedorReembolso
+            >04</tipoIdentificacionProveedorReembolso>
+            <identificacionProveedorReembolso
+            >identificacionProvee</identificacionProveedorReembolso>
             <codPaisPagoProveedorReembolso>000</codPaisPagoProveedorReembolso>
             <tipoProveedorReembolso>01</tipoProveedorReembolso>
             <codDocReembolso>00</codDocReembolso>
