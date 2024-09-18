@@ -5,6 +5,8 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare
 
+from odoo.addons.l10n_ec.models.res_partner import verify_final_consumer
+
 _logger = logging.getLogger(__name__)
 
 
@@ -296,6 +298,55 @@ class AccountMove(models.Model):
         elif identification_type in ("21", "20", "19"):
             return "08"
         return identification_type
+
+    def _get_l10n_ec_identification_type(self):
+        """El verdadero lugar en donde debería darse esto... pendiente para moverlo a base"""
+        self.ensure_one()
+        move = self
+        # __import__("ipdb").set_trace()
+        iparner_id_type = (
+            move.partner_id.commercial_partner_id.l10n_latam_identification_type_id.id
+        )
+        it_ruc = self.env.ref("l10n_ec.ec_ruc", False).id
+        it_dni = self.env.ref("l10n_ec.ec_dni", False).id
+        it_passport = self.env.ref("l10n_ec.ec_passport", False).id
+        it_unknown = self.env.ref("l10n_ec.ec_unknown", False).id
+        it_vat = self.env.ref("l10n_latam_base.it_vat", False).id
+        it_fid = self.env.ref("l10n_latam_base.it_fid", False).id
+        is_final_consumer = verify_final_consumer(
+            move.partner_id.commercial_partner_id.vat
+        )
+        is_exportacion = move.partner_id.commercial_partner_id.country_id.code != "EC"
+
+        identification_code = ""
+        if move.move_type in ("in_invoice", "in_refund"):
+            identification_code = {it_ruc: "01", it_dni: "02", it_unknown: "03"}[
+                iparner_id_type
+            ]
+
+        elif move.move_type in ("out_invoice", "out_refund"):
+            if not is_exportacion:
+                identification_code = (
+                    is_final_consumer
+                    and "07"
+                    or {
+                        it_ruc: "04",
+                        it_dni: "05",
+                        it_passport: "06",
+                        it_fid: "08",
+                        it_vat: "08",
+                    }[iparner_id_type]
+                )
+            else:
+                identification_code = {
+                    it_ruc: "20",
+                    it_dni: "21",
+                    it_passport: "19",
+                    it_fid: "19",
+                    it_vat: "19",
+                }.get(iparner_id_type, "09")
+
+        return identification_code
 
     def _is_manual_document_number(self):
         is_purchase = super()._is_manual_document_number()

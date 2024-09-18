@@ -206,7 +206,7 @@
 	</xsd:simpleType>
 	<xsd:simpleType name="contribuyenteRimpe">
 		<xsd:restriction base="xsd:string">
-		  <xsd:pattern value="CONTRIBUYENTE (NEGOCIO POPULAR - )?RÉGIMEN RIMPE"/>
+		  <xsd:pattern value="CONTRIBUYENTE RÉGIMEN RIMPE"/>
 	    </xsd:restriction>
 	</xsd:simpleType>
 	<xsd:simpleType name="tipoIdentificacionComprador">
@@ -355,22 +355,22 @@
 	</xsd:simpleType>
 	<xsd:simpleType name="cantidad">
 		<xsd:restriction base="xsd:decimal">
-			<xsd:totalDigits value="14"/>
-			<xsd:fractionDigits value="2"/>
+			<xsd:totalDigits value="18"/>
+			<xsd:fractionDigits value="6"/>
 			<xsd:minInclusive value="0"/>
 		</xsd:restriction>
 	</xsd:simpleType>
 	<xsd:simpleType name="precioUnitario">
 		<xsd:restriction base="xsd:decimal">
-			<xsd:totalDigits value="14"/>
-			<xsd:fractionDigits value="2"/>
+			<xsd:totalDigits value="18"/>
+			<xsd:fractionDigits value="6"/>
 			<xsd:minInclusive value="0"/>
 		</xsd:restriction>
 	</xsd:simpleType>
 	<xsd:simpleType name="precioSinSubsidio">
 		<xsd:restriction base="xsd:decimal">
-			<xsd:totalDigits value="14"/>
-			<xsd:fractionDigits value="2"/>
+			<xsd:totalDigits value="18"/>
+			<xsd:fractionDigits value="6"/>
 			<xsd:minInclusive value="0"/>
 		</xsd:restriction>
 	</xsd:simpleType>
@@ -982,6 +982,22 @@
 					</xsd:complexType>
 				</xsd:element>
 				<xsd:element name="reembolsos" minOccurs="0" type="reembolsos"/>
+				<xsd:element minOccurs="0" name="retenciones">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element maxOccurs="unbounded" name="retencion">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="codigo" type="codigoRetencion"/>
+										<xsd:element name="codigoPorcentaje" type="codigoPorcentajeRetencion"/>
+										<xsd:element name="tarifa" type="tarifaRetencion"/>
+										<xsd:element name="valor" type="valorRetencion"/>
+									</xsd:sequence>
+								</xsd:complexType>
+							</xsd:element>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
 				<xsd:element name="infoSustitutivaGuiaRemision" minOccurs="0"  maxOccurs="1">
 					<xsd:complexType>
 						<xsd:annotation>
@@ -1032,6 +1048,12 @@
 							</xsd:element>
 						</xsd:sequence>
 					</xsd:complexType>
+				</xsd:element>
+				<xsd:element ref="ds:Signature" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation xml:lang="en"> Set of data associated with the invoice which guarantee the authorship and integrity of the message. It is defined as optional to ease the validation and transmission of the file. However, this block of electronic signature must be completed in order for an electronic invoice to be considered legally valid before third parties.</xsd:documentation>
+						<xsd:documentation xml:lang="es"> Conjunto de datos asociados a la factura que garantizarán la autoría y la integridad del mensaje. Se define como opcional para facilitar la verificación y el tránsito del fichero. No obstante, debe cumplimentarse este bloque de firma electrónica para que se considere una factura electrónica válida legalmente frente a terceros.</xsd:documentation>
+					</xsd:annotation>
 				</xsd:element>
 			</xsd:sequence>
 			<xsd:attribute name="id">

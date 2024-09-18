@@ -174,6 +174,8 @@ class AccountEdiDocument(models.Model):
         if document_type == "debit_note":
             filename = f"NotaDebito_V{company.l10n_ec_debit_note_version}"
         # TODO: agregar logica para demas tipos de documento
+
+        _logger.info("DEBUG PV >>> xsdfile: ", path.join(base_path, f"{filename}.xsd"))
         return path.join(base_path, f"{filename}.xsd")
 
     def _l10n_ec_get_info_tributaria(self, document):
@@ -350,6 +352,7 @@ class AccountEdiDocument(models.Model):
                 self._l10n_ec_get_info_debit_note(),
             )
         # TODO: agregar logica para demas tipos de documento
+        _logger.info("DEBUG PV >>> xml_file", xml_file)
         return xml_file
 
     def _l10n_ec_get_info_additional(self):

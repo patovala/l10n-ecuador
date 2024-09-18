@@ -6,7 +6,7 @@ from odoo.tests import Form, tagged
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 
-@tagged("post_install_l10n", "post_install", "-at_install")
+@tagged("post_install_l10n", "post_install", "-at_install", "pv")
 class TestL10nECCommon(AccountTestInvoicingCommon):
     @classmethod
     def setUpClass(
