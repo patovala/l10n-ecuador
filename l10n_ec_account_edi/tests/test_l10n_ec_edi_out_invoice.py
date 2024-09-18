@@ -129,7 +129,6 @@ class TestL10nAccountEdi(TestL10nECEdiCommon):
     )
     def test_l10n_ec_out_invoice_sri(self):
         """Crear factura electrónica, con la configuración correcta"""
-        _logger.info("DEBUG test test_l10n_ec_out_invoice_sri >>>>>>>>>>>>>>>>>>")
         # Configurar los datos previamente
         self._setup_edi_company_ec()
         # Compañia no obligada a llevar contabilidad

@@ -317,9 +317,6 @@ class AccountMove(models.Model):
         )
         is_exportacion = move.partner_id.commercial_partner_id.country_id.code != "EC"
 
-        # import wdb
-        # wdb.set_trace()
-
         identification_code = ""
         if move.move_type in ("in_invoice", "in_refund"):
             identification_code = {it_ruc: "01", it_dni: "02", it_unknown: "03"}[

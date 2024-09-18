@@ -354,10 +354,6 @@ class AccountEdiDocument(models.Model):
                 self._l10n_ec_get_info_debit_note(),
             )
         # TODO: agregar logica para demas tipos de documento
-
-        # import wdb
-        # wdb.set_trace()
-        #
         _logger.info("DEBUG PV >>> xml_file", xml_file)
         return xml_file
 
