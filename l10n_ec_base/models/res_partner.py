@@ -44,5 +44,5 @@ class ResPartner(models.Model):
     def unlink(self):
         for partner in self:
             if partner.vat in ["9999999999", "9999999999999"]:
-                raise UserError(_("You cannot unlink final consumer"))
+                return UserError(_("You cannot unlink final consumer"))
         return super(ResPartner, self).unlink()
