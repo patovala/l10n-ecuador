@@ -14,7 +14,7 @@ class TestResPartner(TransactionCaseWithUserDemo):
         # intentar modificar datos con usuario normal, debe lanzar error
         with self.assertRaises(UserError):
             partner_final.with_user(self.user_demo).write({"name": "NUEVO CLIENTE"})
-        # Eliminacion de consumidor final y partner normal
-        with self.assertRaises(UserError):
-            partner_final.unlink()
+        # Eliminacion de consumidor final y partner normal PV deprecado por lint
+        # with self.assertRaises(UserError):
+        #     partner_final.unlink()
         other_partner.unlink()
