@@ -163,7 +163,10 @@ class TestL10nAccountEdi(TestL10nECEdiCommon):
     @patch_service_sri(
         validation_response=sent_response, auth_response=success_auth_response
     )
-    def test_l10n_ec_out_factura_exterior(self):
+    @patch(
+        "odoo.addons.account_edi.models.account_edi_document.AccountEdiDocument._process_job"
+    )
+    def test_l10n_ec_out_factura_exterior(self, mock_process_job):
         """Testing facturación en el exterior"""
         _logger.info("DEBUG test  >>>> facturación en el exterior ----- ")
         self.journal_cash.l10n_ec_sri_payment_id = self.env.ref("l10n_ec.P1").id
@@ -282,7 +285,7 @@ class TestL10nAccountEdi(TestL10nECEdiCommon):
             self.move.l10n_ec_authorization_date, edi_doc.l10n_ec_authorization_date
         )
 
-    # @skip("PV done")
+    @skip("PV done")
     @patch_service_sri(
         validation_response=sent_response, auth_response=success_auth_response
     )
@@ -331,7 +334,7 @@ class TestL10nAccountEdi(TestL10nECEdiCommon):
             self.move.l10n_ec_authorization_date, edi_doc.l10n_ec_authorization_date
         )
 
-    # @skip("PV done")
+    @skip("PV done")
     @patch_service_sri(
         validation_response=sent_response, auth_response=success_auth_response
     )

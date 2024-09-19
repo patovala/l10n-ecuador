@@ -354,7 +354,7 @@ class AccountEdiDocument(models.Model):
                 self._l10n_ec_get_info_debit_note(),
             )
         # TODO: agregar logica para demas tipos de documento
-        _logger.info("DEBUG PV >>> xml_file", xml_file)
+        _logger.info("DEBUG PV >>> xml_file %s", xml_file)
         return xml_file
 
     def _l10n_ec_get_info_additional(self):
