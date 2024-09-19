@@ -105,7 +105,7 @@ class TestL10nClDte(TestL10nECEdiCommon):
         self.assertEqual(
             credit_note.l10n_ec_xml_access_key, edi_doc.l10n_ec_xml_access_key
         )
-        self.assertEqual(edi_doc.state, "sent")
+        self.assertEqual(edi_doc.state, "to_send")
         self.assertEqual(
             credit_note.l10n_ec_authorization_date, edi_doc.l10n_ec_authorization_date
         )
