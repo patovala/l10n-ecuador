@@ -164,12 +164,17 @@ class TestL10nAccountEdi(TestL10nECEdiCommon):
         validation_response=sent_response, auth_response=success_auth_response
     )
     @patch(
-        "odoo.addons.account_edi.models.account_edi_document.AccountEdiDocument._process_job"
+        "odoo.addons.l10n_ec_account_edi.models.account_edi_format."
+        "AccountEdiFormat._post_invoice_edi"
     )
-    def test_l10n_ec_out_factura_exterior(self, mock_process_job):
+    def test_l10n_ec_out_factura_exterior(self, mock_post_invoice):
         """Testing facturación en el exterior"""
         _logger.info("DEBUG test  >>>> facturación en el exterior ----- ")
         self.journal_cash.l10n_ec_sri_payment_id = self.env.ref("l10n_ec.P1").id
+        # mock_post_invoice.return_value.get.return_value = {"success": True, "attachment": 999}
+        mock_post_invoice.return_value.get.return_value = {"success": True}
+        # {'success': False, 'error': '', 'attachment': ir.attachment(1402,),
+        # 'blocking_level': False}
 
         # PV ------- IMPORTANT --------
         # most of the tax shaping are being inspired from here:
@@ -263,10 +268,11 @@ class TestL10nAccountEdi(TestL10nECEdiCommon):
 
         # Generar xml
 
-        # __import__("ipdb").set_trace()
-
         edi_doc = self.move._get_edi_document(self.edi_format)
         edi_doc._process_documents_web_services(with_commit=False)
+        xml_data = edi_doc._l10n_ec_render_xml_edi()
+
+        # __import__("ipdb").set_trace()
 
         self.assertEqual(self.move.invoice_line_ids.name, "Producto de prueba")
         self.assertEqual(self.move.invoice_line_ids.tax_ids[0].name, "Iva 0%")
@@ -276,7 +282,6 @@ class TestL10nAccountEdi(TestL10nECEdiCommon):
         )
 
         # validate the generated xml
-        xml_data = edi_doc._l10n_ec_render_xml_edi()
         self.assertIn('version="2.1.0"', xml_data)
         self.assertIn("<codigo>2</codigo>", xml_data)
         self.assertIn("<codigoPorcentaje>0</codigoPorcentaje>", xml_data)
