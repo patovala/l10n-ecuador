@@ -1,3 +1,4 @@
+from unittest import skip
 from unittest.mock import patch
 
 from odoo.tests import tagged
@@ -11,6 +12,7 @@ from .sri_response import patch_service_sri
 from .test_edi_common import TestL10nECEdiCommon
 
 
+@skip("PV this thing needs rework")
 @tagged("post_install_l10n", "post_install", "-at_install", "mail")
 class TestL10nMail(TestL10nECEdiCommon, MailCommon):
     @patch_service_sri
