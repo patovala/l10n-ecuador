@@ -162,7 +162,7 @@ class AccountEdiDocument(models.Model):
 
     def _l10n_ec_get_xsd_filename(self):
         filename = ""
-        base_path = path.join("l10n_ec_account_edi", "data", "xsd")
+        base_path = path.join("l10n_ec_account_edi", "static", "xsd")
         company = self.move_id.company_id or self.env.company
         document_type = self._l10n_ec_get_document_type()
         if document_type == "invoice":
