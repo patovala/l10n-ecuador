@@ -104,8 +104,12 @@ class SriKeyType(models.Model):
             extension = certificate.extensions.get_extension_for_oid(
                 ExtensionOID.KEY_USAGE
             )
+            # extension = certificate.extensions.get_extension_for_oid(
+            #     ExtensionOID.BASIC_CONSTRAIN
+            # )
             is_digital_signature = extension.value.digital_signature
         except ExtensionNotFound as ex:
+            _logger.info("ERRORRR >>>>>>>>>>>>>>>>>>>>>>>>>>>>> %s", tools.ustr(ex))
             _logger.debug(tools.ustr(ex))
         if not is_digital_signature:
             # cuando hay mas de un certificado, tomar el certificado correcto

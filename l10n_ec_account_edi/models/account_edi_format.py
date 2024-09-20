@@ -192,6 +192,7 @@ class AccountEdiFormat(models.Model):
         return errors
 
     def _post_invoice_edi(self, documents):
+        # __import__('ipdb').set_trace()
         res = {}
         if self.code not in ("l10n_ec_format_sri",):
             return super()._post_invoice_edi(documents)
@@ -278,6 +279,7 @@ class AccountEdiFormat(models.Model):
                         )
                         errors.extend(msj)
             except Exception as ex:
+                _logger.info("ERROR somewhere here  >>>>>>>>>> %s", tools.ustr(ex))
                 _logger.error(tools.ustr(traceback.format_exc()))
                 errors.append(
                     _(

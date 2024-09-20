@@ -11,7 +11,6 @@ from odoo.addons.l10n_ec_account_edi.models.account_edi_document import (
     AccountEdiDocument,
 )
 
-# from .sri_response import patch_service_sri, validation_sri_response_returned
 from .sri_response import patch_service_sri
 from .test_edi_common import TestL10nECEdiCommon
 
@@ -61,7 +60,8 @@ success_auth_response.get = MagicMock(side_effect=auth_response_se)
 # --------------------- 8<---------    PV run only these set of tests by now -----
 
 
-@tagged("post_install_l10n", "post_install", "-at_install", "pv")
+# @tagged("post_install_l10n", "post_install", "-at_install", "pv")
+@tagged("post_install_l10n", "post_install", "-at_install")
 class TestL10nAccountEdi(TestL10nECEdiCommon):
     def setUp(self, chart_template_ref=None):
         super().setUp()
