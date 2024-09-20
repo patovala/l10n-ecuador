@@ -3,7 +3,8 @@
     "summary": "Electronic data interchange adapted Ecuadorian localization",
     "category": "Account",
     "author": "Odoo Community Association (OCA), "
-    "Carlos Lopez, Renan Nazate, Yazber Romero, Luis Romero, Jorge Quiguango",
+    "Carlos Lopez, Renan Nazate, Yazber Romero, Luis Romero"
+    ", Jorge Quiguango, Patricio Valarezo",
     "website": "https://github.com/OCA/l10n-ecuador",
     "license": "AGPL-3",
     "version": "15.0.1.2.4",
@@ -19,6 +20,8 @@
         "data/edi_templates/edi_liquidation.xml",
         "data/edi_templates/edi_credit_note.xml",
         "data/edi_templates/edi_debit_note.xml",
+        "data/account_tax_group_data_15.xml",
+        "data/account_tax_15_template_vat_data.xml",
         "data/cron_send_email_electronic_documents.xml",
         "data/email_template_edi_invoice.xml",
         "report/edi_report_templates.xml",

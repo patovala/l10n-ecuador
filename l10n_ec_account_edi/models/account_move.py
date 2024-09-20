@@ -303,7 +303,6 @@ class AccountMove(models.Model):
         """El verdadero lugar en donde debería darse esto... pendiente para moverlo a base"""
         self.ensure_one()
         move = self
-        # __import__("ipdb").set_trace()
         iparner_id_type = (
             move.partner_id.commercial_partner_id.l10n_latam_identification_type_id.id
         )
@@ -338,13 +337,14 @@ class AccountMove(models.Model):
                     }[iparner_id_type]
                 )
             else:
-                identification_code = {
-                    it_ruc: "20",
-                    it_dni: "21",
-                    it_passport: "19",
-                    it_fid: "19",
-                    it_vat: "19",
-                }.get(iparner_id_type, "09")
+                # identification_code = {
+                #     it_ruc: "20",
+                #     it_dni: "21",
+                #     it_passport: "19",
+                #     it_fid: "19",
+                #     it_vat: "19",
+                # }.get(iparner_id_type, "09")
+                identification_code = "08"
 
         return identification_code
 

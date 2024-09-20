@@ -162,7 +162,7 @@ class AccountEdiDocument(models.Model):
 
     def _l10n_ec_get_xsd_filename(self):
         filename = ""
-        base_path = path.join("l10n_ec_account_edi", "data", "xsd")
+        base_path = path.join("l10n_ec_account_edi", "static", "xsd")
         company = self.move_id.company_id or self.env.company
         document_type = self._l10n_ec_get_document_type()
         if document_type == "invoice":
@@ -175,7 +175,9 @@ class AccountEdiDocument(models.Model):
             filename = f"NotaDebito_V{company.l10n_ec_debit_note_version}"
         # TODO: agregar logica para demas tipos de documento
 
-        _logger.info("DEBUG PV >>> xsdfile: ", path.join(base_path, f"{filename}.xsd"))
+        _logger.info(
+            "DEBUG PV >>> xsdfile: %s ", path.join(base_path, f"{filename}.xsd")
+        )
         return path.join(base_path, f"{filename}.xsd")
 
     def _l10n_ec_get_info_tributaria(self, document):
@@ -329,30 +331,30 @@ class AccountEdiDocument(models.Model):
             return "0.00"
 
     def _l10n_ec_render_xml_edi(self):
-        ViewModel = self.env["ir.ui.view"].sudo()
+        ui_view = self.env["ir.ui.view"].sudo()
         document_type = self._l10n_ec_get_document_type()
         xml_file = ""
         if document_type == "invoice":
-            xml_file = ViewModel._render_template(
+            xml_file = ui_view._render_template(
                 "l10n_ec_account_edi.ec_edi_invoice", self._l10n_ec_get_info_invoice()
             )
         if document_type == "purchase_liquidation":
-            xml_file = ViewModel._render_template(
+            xml_file = ui_view._render_template(
                 "l10n_ec_account_edi.ec_edi_liquidation",
                 self._l10n_ec_get_info_liquidation(),
             )
         if document_type == "credit_note":
-            xml_file = ViewModel._render_template(
+            xml_file = ui_view._render_template(
                 "l10n_ec_account_edi.ec_edi_credit_note",
                 self._l10n_ec_get_info_credit_note(),
             )
         if document_type == "debit_note":
-            xml_file = ViewModel._render_template(
+            xml_file = ui_view._render_template(
                 "l10n_ec_account_edi.ec_edi_debit_note",
                 self._l10n_ec_get_info_debit_note(),
             )
         # TODO: agregar logica para demas tipos de documento
-        _logger.info("DEBUG PV >>> xml_file", xml_file)
+        _logger.info("DEBUG PV >>> xml_file %s", xml_file)
         return xml_file
 
     def _l10n_ec_get_info_additional(self):
